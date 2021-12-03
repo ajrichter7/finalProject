@@ -1,9 +1,8 @@
-# Analyzing the Effect of Different Shortest Path Algorithms on Eccentricty and Centrality Closeness 
-
+# Analyzing the Effect of Different Shortest Path Algorithms on Eccentricty and Closeness Centrality
 ## Abstract
 _In a few sentences, describe the purpose of the project, the approach, and the results. This should summarize the whole project._
 
-The goal of this project is to see how using different shortest path algorithms affects the eccentricity and centrality closeness of nodes in both weighted and unweighted networks. 
+The goal of this project is to see how using different shortest path algorithms affects the eccentricity and closeness centrality of nodes in both weighted and unweighted networks. 
 
 ## Motivation 
 
@@ -11,37 +10,61 @@ _In a few sentences, describe the biological problem, and why a computational ap
 
 ## Methods 
 
-1. Graphs and the computational problem
+1. Calculating the eccentricity closeness and the centrality closeness of nodes in a network 
 2. Approaches you used
 3. Datasets/Inputs
 4. Output Types (a list of predictions? A GraphSpace graph? Etc.)
 
-### BFS
+### Breadth First Search
+
+We created a Breadth First Search (BFS) algorithm in Lab3. 
+```
+Create a queue Q 
+Mark v as visited and put v into Q 
+While Q is non-empty 
+    Eemove the head u of Q 
+    Mark and enqueue all (unvisited) neighbours of u
+```
 
 ### Dijkstra
 
-### Closeness Centrality 
+We learned about Dijkstra's algorithm in class. 
+```
+For each node in the graph: 
+  dist[node] = infinity
+  
+Initialize the dist of source node to 0 
+Initialize a Q to be the set of all nodes in the graph 
 
-Write a `calculate_closeness()` function that returns a dictionary of (node,closeness-centrality) pairs.  Closeness centrality <img src="https://render.githubusercontent.com/render/math?math=C(v)"> for a node <img src="https://render.githubusercontent.com/render/math?math=v \in V"> is computed as
+While Q not empty:
+  Select a node A that has the smallest dist
+  Remove A from Q
+  For each neighbor B of A: 
+     If dist[A] + cost(A,B) < dist[B] # where cost(A,B) --> weight of the edge
+        dist[B] = dist[A] + cost(A,B)
+return dist
+    
+```
+
+### Centrality Measures
+
+#### Closeness 
+
+The **closeness centrality** of a node is the average length of the shortest path between the node and all other nodes in a network. Closeness centrality <img src="https://render.githubusercontent.com/render/math?math=C(v)"> for a node <img src="https://render.githubusercontent.com/render/math?math=v \in V"> is computed as
 
 <img src="https://render.githubusercontent.com/render/math?math=\Large C(v) = \sum_{u \in V} \frac{1}{\delta_{uv}}">
 
-where <img src="https://render.githubusercontent.com/render/math?math=\delta_{uv}"> is the length of the shortest path from node <img src="https://render.githubusercontent.com/render/math?math=u"> to node <img src="https://render.githubusercontent.com/render/math?math=v">.
+The node with the highest closeness centrality is the closest to all the other nodes. 
 
-:bulb: Note that the distance <img src="https://render.githubusercontent.com/render/math?math=\delta_{vv}=0"> will always be zero (the distance from the source to itself).  You can ignore this case; otherwise you will get a `Divide by Zero` error.
+In HW2, we wrote a `calculate_closeness()` function that returns a dictionary of (node,closeness-centrality) pairs.  
 
-:bulb: In general, if you have a disconnected network, you can ignore any case where <img src="https://render.githubusercontent.com/render/math?math=\delta_{uv}=\infty">. (These networks are connected, so you won't run into this case in HW2).
+#### Eccentricity Closeness
 
-:hammer: Lab3 will include instructions for calculating the length of the shortest path from one node to all others. In other words, you will have a `shortest_path()` function that will take a node `v` and return a dictionary of (`u`,distance) pairs that contains the shortest path length from `v` to each other node.
-
-### Eccentricity Closeness
-Write a `calculate_eccentricity()` function that calculates the Eccentricity centrality. Instead of the sum, take the _maximum_ shortest path from <img src="https://render.githubusercontent.com/render/math?math=v> to any other node <img src="https://render.githubusercontent.com/render/math?math=u \in V>. Note that this corresponds to the _minimum_ reciprocal of this value.:
+In HW2, it outlines a challenge in which we wite a `calculate_eccentricity()` function that calculates the eccentricity centrality. Instead of the sum, take the _maximum_ shortest path from <img src="https://render.githubusercontent.com/render/math?math=v"> to any other node <img src="https://render.githubusercontent.com/render/math?math=u \in V">. Note that this corresponds to the _minimum_ reciprocal of this value.:
 
 <img src="https://render.githubusercontent.com/render/math?math=\Large C_{ecc}(v) = \min_{u \in V} \frac{1}{\delta_{uv}}">
 
 where <img src="https://render.githubusercontent.com/render/math?math=\delta_{uv}"> is the length of the shortest path from node <img src="https://render.githubusercontent.com/render/math?math=u"> to node <img src="https://render.githubusercontent.com/render/math?math=v">.
-
-You can resize the nodes in the GraphSpace network according to the eccentricity centrality - be sure to give this graph a different name so your closeness centrality is still in GraphSpace.
 
 ## Results
 
@@ -53,4 +76,6 @@ _In one paragraph, discuss how your findings (or anticipated findings) would fit
 
 ## References 
 
-_List of references you used._
+Slides from class.
+BFS: https://www.studytonight.com/post/breadth-first-search-or-bfs-for-a-graph
+
