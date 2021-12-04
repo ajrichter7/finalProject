@@ -32,7 +32,9 @@ Centrality measurements are one useful tool in analyzing networks. We care about
  </tr>
 </table>
 
-First, I ran the algorithms for BFS and Dijkstras on the Hippie and Badger networks. Each Netowrk has 6 associated txt files. BFS does not account for weighted edges so we only output two files for the Hippie and Badger networks, respectively. Dijkstra we run the calculations for centrality measures twice, accounting for the weights of an edge and not accounting for edge weights to see how it effects the centrality measures. We would expect that the weighted measures of Dijkstra are the most accurate measurements of centrality for the network.  
+First, I ran the algorithms for BFS and Dijkstras on the Hippie and Badger networks. I then outputted their eccentricity and closeness measurements in separate files. Each network has 6 associated txt files. 
+* BFS does not account for weighted edges so we only output two files for the Hippie and Badger networks, respectively. 
+* Dijkstra we run the calculations for centrality measures twice, accounting for the weights of an edge and not accounting for edge weights to see how it effects the centrality measures. _We would expect that the weighted measures of Dijkstra are the most accurate measurements of centrality for the network._  
 
 ### Breadth First Search
 
@@ -100,7 +102,7 @@ The [badger social network](https://www.sciencedirect.com/science/article/pii/S0
 
 The [Hippie Dataset](http://cbdm-01.zdv.uni-mainz.de/~mschaefer/hippie/download.php/ "Database source website for download") is one massive edge list file with various columns. 
 
-The columns are: node1, node1 id, node2, node2 id, weight, notes 
+The columns are: `node1`, `node1 id`, `node2`, `node2 id`, `weight`, and `notes` 
 
 I parsed the network using high confidence, so only edges with weights over .8. I also decided not to include self loops in the network as that would effect the centrality measurements. 
 
@@ -118,6 +120,6 @@ _In one paragraph, discuss how your findings (or anticipated findings) would fit
 
 ## References 
 
-Slides from class.
-BFS: https://www.studytonight.com/post/breadth-first-search-or-bfs-for-a-graph
+* Slides from class. 
+* BFS: https://www.studytonight.com/post/breadth-first-search-or-bfs-for-a-graph
 
