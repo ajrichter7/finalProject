@@ -1,7 +1,4 @@
-## HW2 Visualize Animal Social Networks
-## Out: Wednesday Sept 15
-## Due: Monday Sept 27
-## Lab3 will give you code for calculating shortest paths
+## Used a lot of the functions from hw2
 
 #Alex Richter
 import hw2_utils as utils
@@ -9,128 +6,277 @@ from graphspace_python.api.client import GraphSpace
 from graphspace_python.graphs.classes.gsgraph import GSGraph
 
 def main():
-    dolphin = read_edge_file('dolphin-files/dolphin-edges.txt')
-    make_graph(dolphin)
+    badgerEdgeList, badgerAdjList, badgerNodeList = read_badger('badger-files/badger-edges.txt')
+    # dijkstra(badgerAdjList, '015p')
+    # badgerAdjList = read_adjlist('badger-files/badger-edges.txt', 1)
+    badgerCloseDict, badgerEccentDict = calculate(badgerAdjList)
+    # outputFiles('BadgerEccentricityBFS.txt', badgerEccentDict)
+    outputtoGraph(badgerNodeList, badgerEdgeList, badgerAdjList, 'badgerEccentricityBFS', 'eccentricity', badgerEccentDict)
+    # outputFiles('BadgerClosenessBFS.txt', badgerCloseDict)
+    # outputtoGraph(badgerNodeList, badgerEdgeList, badgerAdjList, 'badgerClosenessBFS', 'closeness', badgerCloseDict)
+
+    # badgerCloseDictW, badgerEccentDictW = calculateDijkstra(badgerAdjList)
+    # #outputFiles('BadgerEccentricityDijkstraUnweighted.txt', badgerEccentDijDict)
+    # outputFiles('BadgerEccentricityDijkstraWeighted.txt', badgerEccentDictW)
+    # # outputFiles('BadgerClosenessDijkstraUnweighted.txt', badgerCloseDijDict)
+    # outputFiles('BadgerClosenessDijkstraWeighted.txt', badgerCloseDictW)
+
+    # hippieEdgeList, hippieAdjList, hippieNodeList = read_hippie('hippie_current.txt')
+    # print(hippieAdjList)
+    # hippieAdjList = read_adjlist('hippie_current.txt', 2)
+    # hippieCloseDict, hippieEccentDict = calculate(hippieAdjList)
+    # outputFiles('HippieEccentricityBFS.txt', hippieEccentDict)
+    # outputFiles('HippieClosenessBFS.txt', hippieCloseDict)
+
+    # outputFiles('HippieEccentricityDijkstraUnweighted.txt', hippieEccentDijDict)
+    # outputFiles('HippieEccentricityDijkstraWeighted.txt', hippieEccentDictW)
+    # outputFiles('HippieClosenessDijkstraUnweighted.txt', hippieCloseDijDict)
+    # outputFiles('HippieClosenessDijkstraWeighted.txt', hippieCloseDictW)
+
+    # hippie = pruneGraph(hippieAdjList, hippieEdgeList, hippieNodeList)
+    # output(badgerNodeList, badgerEdgeList, 'badger')
+    # output(hippieNodeList, hippieEdgeList, 'hippie')
     return # done with main()
 
-def read_edge_file(file_name):
+def outputFiles(filename, d):
+    f = open(filename, "w")
+    sortDict = dict(list(reversed(sorted(d.items(), key=lambda item: item[1]))))
+
+    for key, value in sortDict.items():
+        f.write(str(key)+ '     '+ str(value)+'\n')
+
+    f.close()
+    return
+## Function taken from lab2utils.py
+## read undirected edge list into adjacency list.
+## adjlist is a DICTIONARY, which can be accessed like A[v].
+def read_adjlist(infile:str, x) -> dict:
+    adjlist = {}
+    with open(infile) as fin:
+        for line in fin:
+            edge = line.strip().split()
+            if edge[0] not in adjlist:
+                adjlist[edge[0]] = set()
+            if edge[x] not in adjlist:
+                adjlist[edge[x]] = set()
+            adjlist[edge[0]].add(edge[x])
+            adjlist[edge[x]].add(edge[0])
+    return adjlist
+
+def read_badger(file_name):
     #Function from HW1
     #Open the file and read in the data
+    #node1, node2, weight
+
+    #returns a edgelist which is a dictionary where the key is the tuple/edge and the value is the weight
+    #returns a nodelist of all the nodes in the graph
     with open(file_name, 'r') as data:
+        edgelist = {}
+        adjList = {}
         node1 = []
         node2 = []
         for line in data:
             edge = line.split()
             node1.append(edge[0])
             node2.append(edge[1])
-
-    with open('dolphin-files/females.txt') as data:
-        females = data.read().splitlines()
-    with open('dolphin-files/males.txt') as data:
-        males = data.read().splitlines()
-    with open('dolphin-files/unknown-sex.txt') as data:
-        unknownsex = data.read().splitlines()
-
-    with open('dolphin-files/upside-down-lobtailers.txt') as data:
-        udl = data.read().splitlines()
-    with open('dolphin-files/side-floppers.txt') as data:
-        sf = data.read().splitlines()
-
+            edgelist[(edge[0], edge[1])] = float(edge[2])
+            if edge[0] not in adjList:
+                adjList[edge[0]] = {}
+            adjList[edge[0]][edge[1]] = float(edge[2])
+            if edge[1] not in adjList:
+                adjList[edge[1]] = {}
+            adjList[edge[1]][edge[0]] = float(edge[2])
 
     #Create a list of all the nodes in the network
-    ls = []
+    nodelist = []
     for i in node1:
-        if i not in ls: ls.append(i)
+        if i not in nodelist: nodelist.append(i)
 
     for i in node2:
-        if i not in ls: ls.append(i)
+        if i not in nodelist: nodelist.append(i)
 
-    numberOfNodes = len(ls)
+    return edgelist, adjList, nodelist
 
-    #Make the data into an adj_list, this list checks both columns because otherwise
-    #nodes are not counted. The neihbors become a list and each node is its own
-    #dictionary where we include the neighbors, sex, and role of each dolphin.
-    adjList = {}
-    for i in range(numberOfNodes):
-        temp = []
-        sex = ''
-        role = 'unknown'
-        for node in range(len(node1)):
-            if node1[node] == ls[i]:
-                temp.append(node2[node])
-        for node in range(len(node2)):
-            if node2[node] == ls[i]:
-                temp.append(node1[node])
-        if ls[i] in females: sex = 'female'
-        if ls[i] in males: sex = 'male'
-        if ls[i] in unknownsex: sex = 'unknownsex'
-        if ls[i] in udl: role = 'upside down lobtailer'
-        if ls[i] in sf: role = 'side flopper'
-        adjList[ls[i]] = {'neighbors': temp, 'sex' : sex, 'role': role}
+def read_hippie(file_name):
+    #Function similar to read_badger except we change the input for delimiters
+    #Use node1 name and not node1 id <-- might change later
+    #Open the file and read in the data
+    #node1, node1 id, node2, node2 id, weight, info
 
-    return adjList
+    #returns a edgelist which is a dictionary where the key is the tuple/edge and the value is the weight
+    #note: we ignore edges that do not have a large weight do to the size of the graph
+    #returns a nodelist of all the nodes that have edges in the graph
+    with open(file_name, 'r') as data:
+        edgelist = {}
+        node1 = []
+        node2 = []
+        adjList = {}
+        for line in data:
+            edge = line.split()
+            try:
+                if edge[0] != edge[2] and float(edge[4]) >= .95:
+                    node1.append(edge[0])
+                    node2.append(edge[2])
+                    edgelist[(edge[0], edge[2])] = float(edge[4])
+                    if edge[0] not in adjList:
+                        adjList[edge[0]] = {}
+                    adjList[edge[0]][edge[2]] = float(edge[4])
+                    if edge[2] not in adjList:
+                        adjList[edge[2]] = {}
+                    adjList[edge[2]][edge[0]] = float(edge[4])
+            except: pass
 
-def make_graph(dolphin):
-    # Function takes a adjList where it is a dictonary of dictionaries. Each
-    # node has a label with the role of the dolphin in the social network, the
-    # size of the node is scaled 2 times the closeness proximity of a node, and
-    # the color cooresponds to the sex of the dolphin. It also takes in a graph
-    # title from the user as a means to bypass the graphspace error of removing
-    # a graph from the interface.
+    #Create a list of all the nodes in the network
+    nodelist = []
+    for i in node1:
+        if i not in nodelist: nodelist.append(i)
+
+    for i in node2:
+        if i not in nodelist: nodelist.append(i)
+
+    return edgelist, adjList, nodelist
+
+def outputtoGraph(nodelist, edgeList, adjList, title, type, d):
     G = GSGraph()
     attemptNum = input("Attempt Number: ") #put in to avoid multiple graph error
-    G.set_name('Dolphin '+attemptNum)
-    G.set_tags(['HW2']) ## tags help you organize your graphs
-    for node in dolphin.keys():
-        scaled = calculate_closeness(dolphin, node)*2
-        closeness = str(scaled/2)
-        role = dolphin[node].get('role')
-        sex = dolphin[node].get('sex')
-        shapeVar = ''
-        colorVar = ''
-        if (sex) == 'female': colorVar = 'red'
-        if (sex) == 'male': colorVar = 'blue'
-        if (sex) == 'unknownsex': colorVar = 'purple'
-        if (role) == 'side flopper': shapeVar = 'star'
-        if (role) ==  'upside down lobtailer': shapeVar = 'diamond'
-        if shapeVar != '':
-            G.add_node(node, label=node, popup="Role: "+role+"<br>Closeness: "+closeness+"<br>Sex: "+sex)
-            G.add_node_style(node, shape=shapeVar, color=colorVar,height=scaled,width=scaled)
-        else:
-            G.add_node(node, label=node, popup = "Role: No specific role. <br>Closeness: "+closeness+"<br>Sex: "+sex)
-            G.add_node_style(node,color=colorVar,height=scaled,width=scaled)
-    for node in dolphin.keys():
-        for neighbor in dolphin[node].get('neighbors'):
-            G.add_edge(node,neighbor)
-            G.add_edge_style(node,neighbor,width=2)
+    G.set_name(title+attemptNum)
+    G.set_tags(['finalProject']) ## tags help you organize your graphs
+    if type == 'eccentricity':
+        for node in nodelist:
+            G.add_node(node, label=node)
+            c = 'yellow'
+            if d[node] > .5: c = 'blue'
+            if d[node] > .25: c = 'purple'
+            if d[node] > .05: c = 'red'
+            if d[node] > .0025: c = 'orange'
+            G.add_node_style(node,color = c, height=10 / d[node],width=10 / d[node])
+        for edge in edgeList.keys():
+            G.add_edge(edge[0],edge[1])
+    if type == 'closeness':
+        for node in nodelist:
+            G.add_node(node, label=node)
+            c = 'yellow'
+            if d[node] > 25: c = 'orange'
+            if d[node] > 50: c = 'red'
+            if d[node] > 100: c = 'purple'
+            if d[node] > 1000: c = 'blue'
+            if d[node] > 5000: c = 'green'
+            G.add_node_style(node, color = c, height=10 * d[node],width=10 * d[node])
+        for edge in edgeList.keys():
+            G.add_edge(edge[0],edge[1])
     gs = utils.get_connection()
     utils.post(gs,G,'graph_name')
     return
 
-def calculate_closeness(G, v):
+def outputEdgelist(nodelist, edgelist, title, type, d):
+    G = GSGraph()
+    attemptNum = input("Attempt Number: ") #put in to avoid multiple graph error
+    G.set_name(title+attemptNum)
+    G.set_tags(['finalProject']) ## tags help you organize your graphs
+    if type == 'eccentricity':
+        for node in nodelist:
+            G.add_node(node, label=node)
+            G.add_node_style(node,height=10 / d[node],width=10 / d[node])
+        for edge in edgelist.keys():
+            G.add_edge(edge[0],edge[1])
+    if type == 'closeness':
+        for node in nodelist:
+            G.add_node(node, label=node)
+            G.add_node_style(node,height=5* d[node],width=5 * d[node])
+        for edge in edgelist.keys():
+            G.add_edge(edge[0],edge[1])
+    gs = utils.get_connection()
+    utils.post(gs,G,'graph_name')
+    return
+
+def calculate(adjList):
+    closeDict = {}
+    eccentDict = {}
+    for node in adjList.keys():
+        closeness, eccentricity = ClosenessAndEccentricityBFS(adjList, node)
+        closeDict[node] = closeness
+        eccentDict[node] = eccentricity
+
+    return closeDict, eccentDict
+
+def ClosenessAndEccentricityBFS(adjList, input):
     #Most of the function is the same as the shortest_paths function in lab3, but
     #then avoids dividing by 0 and return a sum rather than a dictionary of distances.
+
+    #For hippie, we want to calculate the centrality measures and if they high enough
+    #we want to include those nodes in the graph, ow ignore. even with .9 confidence
+    #still have around 1500 nodes. we don't want that many nodes.
     inf = 10000000000000000
     D = {}
-    for node in G.keys():
-        if node != v: D[node] = inf
-        else: D[node] = 0
+    D[input] = 0
+    for node in adjList.keys():
+        if node != input: D[node] = inf
 
-    Q = [v] # initialize and populate queue of nodes to explore
-    sum = 0
+    Q = [input] # initialize and populate queue of nodes to explore
+    closeness = 0
     while len(Q) != 0:
         exploring = Q.pop(0)
-        for neighbor in G[exploring].get("neighbors"):
+        for neighbor in adjList[exploring]:
             if D[neighbor] == inf:
                  D[neighbor] = D[exploring] + 1 # update distance to neighbor
                  Q.append(neighbor)
 
-    #Caluculate the closeness but avoid division by 0.
+    #Calculate the closeness but avoid division by 0.
     for dist in D.values():
-        if dist != 0: sum += 1 / dist
+        if dist != 0: closeness += 1 / dist
 
-    return sum
+    maxPathNode = max(D, key=D.get)
 
+    eccentricity = 1 / float(D[maxPathNode])
+    return closeness, eccentricity
+
+def getKey(value, dict):
+    for key, val in dict.items():
+        if val == value:
+            return key
+
+def calculateDijkstra(adjList):
+    closeDict = {}
+    eccentDict = {}
+    for node in adjList.keys():
+        c, e = dijkstra(adjList, node)
+        closeDict[node] = c
+        eccentDict[node] = e
+
+    return closeDict, eccentDict
+
+def dijkstra(adjList, input):
+    inf = 10000000000000000
+    D = {}
+    D[input] = 0
+    unvisited = []
+    for node in adjList.keys():
+        unvisited.append(node)
+        if node != input:
+            D[node] = inf
+
+    closeness = 0
+    while len(unvisited) != 0:
+        curNode = min(unvisited, key=lambda node:D[node]) #will get the key for smallest value
+        unvisited.remove(curNode)
+        if D[curNode] == inf:
+            #edge case of disconnected network
+            break
+        for neighbor, cost in adjList[curNode].items():
+            if D[curNode] + cost <= D[neighbor] and D[curNode] + cost > 0:
+                D[neighbor] = D[curNode] + cost
+    #Calculate the closeness but avoid division by 0.
+
+    for dist in D.values():
+        if dist != inf and dist != 0: closeness += 1 / dist
+
+    maxPathNode = max(D, key=D.get)
+
+    eccentricity = 1 / float(D[maxPathNode])
+    return closeness, eccentricity
+
+def pruneGraph(adjList, edgeList, nodeList):
+    return
 # leave this at the bottom of the file
 if __name__ == '__main__':
     main()
