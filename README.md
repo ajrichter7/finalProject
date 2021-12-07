@@ -1,8 +1,7 @@
 # Analyzing the Effect of Different Shortest Path Algorithms on Eccentricty and Closeness Centrality
 ## Abstract
-_In a few sentences, describe the purpose of the project, the approach, and the results. This should summarize the whole project._
 
-The goal of this project is to see how using different shortest path algorithms affects the eccentricity and closeness centrality of nodes in both weighted and unweighted networks. 
+The goal of this project is to see how using different shortest path algorithms affects the eccentricity and closeness centrality of nodes in both weighted and unweighted networks. I used the Badger network from HW2 as a baseline, then attempted to prune Hippie. I ran into diffculties calculating eccentricity in Hippie because I could only get subgraphs that were _disconnected components_. 
 
 ## Motivation 
 
@@ -108,7 +107,7 @@ I parsed the network using high confidence, so only edges with weights over .8. 
 
 ## Results
 
-_In one paragraph, summarize your findings_
+BFS and unweighted Dijkstra returned the same graphs and outputed the same closeness and eccentricity scores. Weighted Dijkstra performed the best, which was to be expected because it took in more information to do so. Hippie was difficult to use because it was hard to get connected components and trying to size down a giant network. The subgraph of Hippie I ended up using had disconnected nodes and therefore, led to incorrect eccentricity scores. 
 
 ### Badger Network Analysis
 Included are the respective graphs for running the various iterations of the algorithms. 
@@ -131,9 +130,39 @@ Included are the respective graphs for running the various iterations of the alg
 
 ### Hippie Network Analysis
 
+Hippie is a massive network of tens of thousands of nodes and edges. So I attempted to scale it. I inserted constants in the code that can be easily changed, so if you wish to test the algorithms on a larger graph one can easily do so. I trim down the Hippie network that I run the algorithms on to get a smaller network by:
+1. Edge weight: when reading in the Hippie file, I only care about adding an edge from the network if the edge has a weight of over .95. I chose this score because there are still 1763 edges and 1510 nodes in the network... this was still too large for graphspace to load properly...
+2. Pruning the adjList 
+```
+Function that will take in the adjList, edgeList, nodeList
+Removes entries in adjList that have less than 10 connections
+Removes entry from nodeList
+Removes any edge that had that entry as an endpoint from the edgeList
+
+Returns updated adjList, edgeList, nodeList
+```
+**Hippie Closeness calculated using BFS:** The size varies with the closeness score as it is calculated by _multiplying_ a constant by the closeness value of that node, as closeness values are bigger than 1. The nodes that are colored yellow are the default color. Those that are colored orange have a higher closeness score (i.e. score greater than 25). If you want the respective score for each node, please check [the correct txt file](https://github.com/ajrichter7/finalProject/blob/main/HippieClosenessBFS.txt). 
+![Hippie Closeness BFS](https://github.com/ajrichter7/finalProject/blob/main/images/hippieclosebfs.png) 
+
+**Hippie Eccentricity calculated using BFS:** Originally, I sought to vary the node size with the eccentricity score as it is calulated by _dividing_ a constant by the eccentricity value of that node, as eccentricity values are less than 1. This was **not** successful because it is a disconnected component when I take part of the Hippie network. If you want the respective score for each node, please check [the correct txt file](https://github.com/ajrichter7/finalProject/blob/main/HippieEccentricityBFS.txt). 
+![Hippie Eccentricity BFS](https://github.com/ajrichter7/finalProject/blob/main/images/hippieeccentdijUW.png) 
+
+**Hippie Closeness and Eccentricity calculated using Dijkstra's (Unweighted):** I then ran Dijkstra's on the hippie network but using the unweighted adjacency list of edges. This simply meant that I gave each edge a weight of 1. When I ran it, it produced the same exact closeness and eccentricity scores as the BFS. This is not surprising as Dijkstra's without different weights is essentially BFS. This can be confirmed in the graphs and files that I uploaded to the repo. It should be noted that regardless of any algorithm, all of the times ran on Hippie because it is disconnected component, the eccentricity scores are all the same. _Because all of the eccentricity scores are the same, I only included the graphspace graph for the eccentricity scores of Hippie created then._
+* [Closeness txt using Dijkstra's Unweighted](https://github.com/ajrichter7/finalProject/blob/main/HippieClosenessDijkstraUnweighted.txt) =  [Closeness txt using BFS](https://github.com/ajrichter7/finalProject/blob/main/HippieClosenessBFS.txt)
+* [Eccentricity txt using Dijkstra's Unweighted](https://github.com/ajrichter7/finalProject/blob/main/HippieEccentricityDijkstraUnweighted.txt) = [Eccentricty txt using BFS](https://github.com/ajrichter7/finalProject/blob/main/HippieEccentricityBFS.txt)
+
+**Hippie Closeness calculated using Dijkstra's (Weighted):** The size varies with the closeness score as it is calculated by _multiplying_ a constant by the closeness value of that node, as closeness values are bigger than 1. The nodes that are colored yellow are the default color. Unlike the graph from using BFS or unweighted Dijkstra's, there are no nodes with a closeness score greater than 25. If you want the respective score for each node, please check [the correct txt file](https://github.com/ajrichter7/finalProject/blob/main/HippieClosenessDijkstraWeighted.txt). 
+![Hippie Closeness Dijkstra Weighted](https://github.com/ajrichter7/finalProject/blob/main/images/hippieclosedijWeighted.png)
+
+**Hippie Eccentricity calculated using Dijkstra's (Weighted):** See note above on eccentricity difficulties. If you want the respective score for each node, please check [the correct txt file](https://github.com/ajrichter7/finalProject/blob/main/HippieEccentricityDijkstraWeighted.txt). 
+
 ## Discussion
 
-_In one paragraph, discuss how your findings (or anticipated findings) would fit into the bigger biological problem/question._
+This work is necessary because it can show important measurements. It is important to know the closeness and eccentricity measurements of a node because it shows how important a node is to the entire system.
+
+### Future Work on Eccentricity
+
+The importance of this work ties into my issues with eccentricity. Due to the fact that every node in Hippie had the same eccentricity score means that I chose a disconnected component. I attempted to write a function that would remove the disconnected nodes in the network and recalculated the eccentricity scores. This code is commented out in `final.py`. If every node in the network has the same eccentricity score, that means there exists a node in the network that is not connected. This is important because it can help us discover connected components within a graph. 
 
 ## References 
 
