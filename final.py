@@ -6,41 +6,57 @@ from graphspace_python.api.client import GraphSpace
 from graphspace_python.graphs.classes.gsgraph import GSGraph
 
 def main():
-    badgerEdgeList, badgerAdjList, badgerAdjListUnweighted, badgerNodeList = read_badger('badger-files/badger-edges.txt')
-    # badgerAdjList = read_adjlist('badger-files/badger-edges.txt', 1)
+    # badgerEdgeList, badgerAdjList, badgerNodeList = read_badger('badger-files/badger-edges.txt')
+    # print('len edgeList = ', len(badgerEdgeList))
+    # print('len adjList = ', len(badgerAdjList))
+    # print('len nodelist =', len(badgerNodeList))
+    # badgerEdgeList, badgerAdjList, badgerNodeList = pruneGraph(badgerEdgeList, badgerAdjList, badgerNodeList)
     # badgerCloseDict, badgerEccentDict = calculate(badgerAdjList)
     # outputFiles('BadgerEccentricityBFS.txt', badgerEccentDict)
-    # outputtoGraph(badgerNodeList, badgerEdgeList, badgerAdjList, 'badgerEccentricityBFS', 'eccentricity', badgerEccentDict)
+    # outputtoGraph(badgerNodeList, badgerEdgeList, 'badgerEccentricityBFS', 'eccentricity', badgerEccentDict)
     # outputFiles('BadgerClosenessBFS.txt', badgerCloseDict)
-    # outputtoGraph(badgerNodeList, badgerEdgeList, badgerAdjList, 'badgerClosenessBFS', 'closeness', badgerCloseDict)
+    # outputtoGraph(badgerNodeList, badgerEdgeList,'badgerClosenessBFS', 'closeness', badgerCloseDict)
 
-    badgerCloseDictW, badgerEccentDictW = calculateDijkstra(badgerAdjList)
-    outputFiles('BadgerEccentricityDijkstraWeighted.txt', badgerEccentDictW)
-    outputtoGraph(badgerNodeList, badgerEdgeList, 'BadgerEccentricityDijkstraWeighted', 'eccentricity', badgerEccentDictW)
-    outputFiles('BadgerClosenessDijkstraWeighted.txt', badgerCloseDictW)
-    outputtoGraph(badgerNodeList, badgerEdgeList,'BadgerClosenessDijkstraWeighted', 'closeness', badgerCloseDictW)
+    # badgerCloseDictW, badgerEccentDictW = calculateDijkstra(badgerAdjList)
+    # outputFiles('BadgerEccentricityDijkstraWeighted.txt', badgerEccentDictW)
+    # outputtoGraph(badgerNodeList, badgerEdgeList, 'BadgerEccentricityDijkstraWeighted', 'eccentricity', badgerEccentDictW)
+    # outputFiles('BadgerClosenessDijkstraWeighted.txt', badgerCloseDictW)
+    # outputtoGraph(badgerNodeList, badgerEdgeList,'BadgerClosenessDijkstraWeighted', 'closeness', badgerCloseDictW)
+    #
+    # badgerCloseDictUW, badgerEccentDictUW = calculateDijkstra(badgerAdjList, 'unweighted')
+    # outputFiles('BadgerEccentricityDijkstraUnweighted.txt', badgerEccentDictUW)
+    # outputtoGraph(badgerNodeList, badgerEdgeList, 'BadgerEccentricityDijkstraUnweighted', 'eccentricity', badgerEccentDictUW)
+    # outputFiles('BadgerClosenessDijkstraUnweighted.txt', badgerCloseDictUW)
+    # outputtoGraph(badgerNodeList, badgerEdgeList, 'BadgerClosenessDijkstraUnweighted', 'closeness', badgerCloseDictUW)
 
-    badgerCloseDictUW, badgerEccentDictUW = calculateDijkstra(badgerAdjListUnweighted)
-    outputFiles('BadgerEccentricityDijkstraUnweighted.txt', badgerEccentDictUW)
-    outputtoGraph(badgerNodeList, badgerEdgeList, 'BadgerEccentricityDijkstraUnweighted', 'eccentricity', badgerEccentDictUW)
-    outputFiles('BadgerClosenessDijkstraUnweighted.txt', badgerCloseDictUW)
-    outputtoGraph(badgerNodeList, badgerEdgeList, 'BadgerClosenessDijkstraUnweighted', 'closeness', badgerCloseDictUW)
-
-    # hippieEdgeList, hippieAdjList, hippieNodeList = read_hippie('hippie_current.txt')
-    # print(hippieAdjList)
-    # hippieAdjList = read_adjlist('hippie_current.txt', 2)
+    hippieEdgeList, hippieAdjList, hippieNodeList = read_hippie('hippie_current.txt')
+    print('len edgeList = ', len(hippieEdgeList))
+    print('len adjList = ', len(hippieAdjList))
+    print('len nodelist =', len(hippieNodeList))
+    hippieEdgeList, hippieAdjList, hippieNodeList = pruneGraph(hippieEdgeList, hippieAdjList, hippieNodeList)
+    print('len edgeList = ', len(hippieEdgeList))
+    print('len adjList = ', len(hippieAdjList))
+    print('len nodelist =', len(hippieNodeList))
+    hippieCloseDict, hippieEccentDict = calculate(hippieAdjList)
+    # hippieEdgeList, hippieAdjList, hippieNodeList = fixdisconnectedcomp(hippieEdgeList, hippieAdjList, hippieNodeList, hippieCloseDict)
     # hippieCloseDict, hippieEccentDict = calculate(hippieAdjList)
-    # outputFiles('HippieEccentricityBFS.txt', hippieEccentDict)
-    # outputFiles('HippieClosenessBFS.txt', hippieCloseDict)
+    outputFiles('HippieEccentricityBFS.txt', hippieEccentDict)
+    outputtoGraph(hippieNodeList, hippieEdgeList, 'HippieEccentricityBFS', 'eccentricity', hippieEccentDict)
+    outputFiles('HippieClosenessBFS.txt', hippieCloseDict)
+    outputtoGraph(hippieNodeList, hippieEdgeList,'HippieClosenessBFS', 'closeness', hippieCloseDict)
 
-    # outputFiles('HippieEccentricityDijkstraUnweighted.txt', hippieEccentDijDict)
-    # outputFiles('HippieEccentricityDijkstraWeighted.txt', hippieEccentDictW)
-    # outputFiles('HippieClosenessDijkstraUnweighted.txt', hippieCloseDijDict)
-    # outputFiles('HippieClosenessDijkstraWeighted.txt', hippieCloseDictW)
+    hippieCloseDictW, hippieEccentDictW = calculateDijkstra(hippieAdjList, 'weighted')
+    outputFiles('HippieEccentricityDijkstraWeighted.txt', hippieEccentDictW)
+    outputtoGraph(hippieNodeList, hippieEdgeList, 'HippieEccentricityDijkstraWeighted', 'eccentricity', hippieEccentDictW)
+    outputFiles('HippieClosenessDijkstraWeighted.txt', hippieCloseDictW)
+    outputtoGraph(hippieNodeList, hippieEdgeList,'HippieClosenessDijkstraWeighted', 'closeness', hippieCloseDictW)
 
-    # hippie = pruneGraph(hippieAdjList, hippieEdgeList, hippieNodeList)
-    # output(badgerNodeList, badgerEdgeList, 'badger')
-    # output(hippieNodeList, hippieEdgeList, 'hippie')
+    hippieCloseDictUW, hippieEccentDictUW = calculateDijkstra(hippieAdjList, 'unweighted')
+    outputFiles('HippieEccentricityDijkstraUnweighted.txt', hippieEccentDictUW)
+    outputtoGraph(hippieNodeList, hippieEdgeList, 'HippieEccentricityDijkstraUnweighted', 'eccentricity', hippieEccentDictUW)
+    outputFiles('HippieClosenessDijkstraUnweighted.txt', hippieCloseDictUW)
+    outputtoGraph(hippieNodeList, hippieEdgeList, 'HippieClosenessDijkstraUnweighted', 'closeness', hippieCloseDictUW)
+
     return # done with main()
 
 def outputFiles(filename, d):
@@ -52,21 +68,6 @@ def outputFiles(filename, d):
 
     f.close()
     return
-## Function taken from lab2utils.py
-## read undirected edge list into adjacency list.
-## adjlist is a DICTIONARY, which can be accessed like A[v].
-def read_adjlist(infile:str, x) -> dict:
-    adjlist = {}
-    with open(infile) as fin:
-        for line in fin:
-            edge = line.strip().split()
-            if edge[0] not in adjlist:
-                adjlist[edge[0]] = set()
-            if edge[x] not in adjlist:
-                adjlist[edge[x]] = set()
-            adjlist[edge[0]].add(edge[x])
-            adjlist[edge[x]].add(edge[0])
-    return adjlist
 
 def read_badger(file_name):
     #Function from HW1
@@ -78,7 +79,6 @@ def read_badger(file_name):
     with open(file_name, 'r') as data:
         edgelist = {}
         adjList = {}
-        adjListUnweighted = {}
         node1 = []
         node2 = []
         for line in data:
@@ -88,14 +88,12 @@ def read_badger(file_name):
             edgelist[(edge[0], edge[1])] = float(edge[2])
             if edge[0] not in adjList:
                 adjList[edge[0]] = {}
-                adjListUnweighted[edge[0]] = {}
             adjList[edge[0]][edge[1]] = float(edge[2])
             adjListUnweighted[edge[0]][edge[1]] = 1
             if edge[1] not in adjList:
                 adjList[edge[1]] = {}
-                adjListUnweighted[edge[1]] = {}
             adjList[edge[1]][edge[0]] = float(edge[2])
-            adjListUnweighted[edge[1]][edge[0]] = 1
+
     #Create a list of all the nodes in the network
     nodelist = []
     for i in node1:
@@ -104,7 +102,7 @@ def read_badger(file_name):
     for i in node2:
         if i not in nodelist: nodelist.append(i)
 
-    return edgelist, adjList, adjListUnweighted, nodelist
+    return edgelist, adjList, nodelist
 
 def read_hippie(file_name):
     #Function similar to read_badger except we change the input for delimiters
@@ -158,8 +156,13 @@ def outputtoGraph(nodelist, edgeList, title, type, d):
             if d[node] > .25: c = 'purple'
             if d[node] > .05: c = 'red'
             if d[node] > .0025: c = 'orange'
-            G.add_node_style(node,color = c, height=10 / d[node],width=10 / d[node])
-        for edge in edgeList.keys():
+            if d[node] < 1e-5:
+                # had to add this condition because otherwise the nodes would not appear! do to it being a disconnected component
+                # we calculate eccentricity and divide by "inf" so eccentricity values very small.
+                G.add_node_style(node,color = c, height=20, width=20)
+            else:
+                G.add_node_style(node,color = c, height=10 / d[node],width=10 / d[node])
+        for edge in edgeList:
             G.add_edge(edge[0],edge[1])
     if type == 'closeness':
         for node in nodelist:
@@ -171,32 +174,25 @@ def outputtoGraph(nodelist, edgeList, title, type, d):
             if d[node] > 1000: c = 'blue'
             if d[node] > 5000: c = 'green'
             G.add_node_style(node, color = c, height=10 * d[node],width=10 * d[node])
-        for edge in edgeList.keys():
+        for edge in edgeList:
             G.add_edge(edge[0],edge[1])
     gs = utils.get_connection()
     utils.post(gs,G,'graph_name')
     return
 
-def outputEdgelist(nodelist, edgelist, title, type, d):
-    G = GSGraph()
-    attemptNum = input("Attempt Number: ") #put in to avoid multiple graph error
-    G.set_name(title+attemptNum)
-    G.set_tags(['finalProject']) ## tags help you organize your graphs
-    if type == 'eccentricity':
-        for node in nodelist:
-            G.add_node(node, label=node)
-            G.add_node_style(node,height=10 / d[node],width=10 / d[node])
-        for edge in edgelist.keys():
-            G.add_edge(edge[0],edge[1])
-    if type == 'closeness':
-        for node in nodelist:
-            G.add_node(node, label=node)
-            G.add_node_style(node,height=5* d[node],width=5 * d[node])
-        for edge in edgelist.keys():
-            G.add_edge(edge[0],edge[1])
-    gs = utils.get_connection()
-    utils.post(gs,G,'graph_name')
-    return
+# def fixdisconnectedcomp(edge, adj, nodels, closeDict):
+#     templs = []
+#     print(closeDict)
+#     for node, value in closeDict.items():
+#         if value == float(0):
+#             templs.append(node)
+#             # for k in adj[node].keys():
+#             #     del adj[k][node]
+#             #     edge = [x for x in edge if x!= (k, node) and x!= (node, k)]
+#             # nodels.remove(node)
+#             # del adj[node]
+#     print(templs)
+#     return edge, adj, nodels
 
 def calculate(adjList):
     closeDict = {}
@@ -239,22 +235,18 @@ def ClosenessAndEccentricityBFS(adjList, input):
     eccentricity = 1 / float(D[maxPathNode])
     return closeness, eccentricity
 
-def getKey(value, dict):
-    for key, val in dict.items():
-        if val == value:
-            return key
-
-def calculateDijkstra(adjList):
+def calculateDijkstra(adjList, weighting):
     closeDict = {}
     eccentDict = {}
+    # disconnectednodes = set()
     for node in adjList.keys():
-        c, e = dijkstra(adjList, node)
+        c, e = dijkstra(adjList, node, weighting)
+        # disconnectednodes.update(ls)
         closeDict[node] = c
         eccentDict[node] = e
-
     return closeDict, eccentDict
 
-def dijkstra(adjList, input):
+def dijkstra(adjList, input, weighting):
     inf = 10000000000000000
     D = {}
     D[input] = 0
@@ -265,27 +257,49 @@ def dijkstra(adjList, input):
             D[node] = inf
 
     closeness = 0
-    while len(unvisited) != 0:
-        curNode = min(unvisited, key=lambda node:D[node]) #will get the key for smallest value
-        unvisited.remove(curNode)
-        if D[curNode] == inf:
-            #edge case of disconnected network
-            break
-        for neighbor, cost in adjList[curNode].items():
-            if D[curNode] + cost <= D[neighbor] and D[curNode] + cost > 0:
-                D[neighbor] = D[curNode] + cost
-    #Calculate the closeness but avoid division by 0.
+    if weighting == 'weighted':
+        while len(unvisited) != 0:
+            curNode = min(unvisited, key=lambda node:D[node]) #will get the key for smallest value
+            unvisited.remove(curNode)
+            if D[curNode] == inf:
+                #edge case of disconnected network
+                break
+            for neighbor, cost in adjList[curNode].items():
+                if D[curNode] + cost <= D[neighbor] and D[curNode] + cost > 0:
+                    D[neighbor] = D[curNode] + cost
 
+    if weighting == 'unweighted':
+        while len(unvisited) != 0:
+            curNode = min(unvisited, key=lambda node:D[node]) #will get the key for smallest value
+            unvisited.remove(curNode)
+            if D[curNode] == inf:
+                #edge case of disconnected network
+                break
+            for neighbor, cost in adjList[curNode].items():
+                if D[curNode] + 1 <= D[neighbor] and D[curNode] + 1 > 0:
+                    D[neighbor] = D[curNode] + 1
+
+    #Calculate the closeness but avoid division by 0.
     for dist in D.values():
-        if dist != inf and dist != 0: closeness += 1 / dist
+        if dist != 0: closeness += 1 / dist
 
     maxPathNode = max(D, key=D.get)
 
     eccentricity = 1 / float(D[maxPathNode])
     return closeness, eccentricity
 
-def pruneGraph(adjList, edgeList, nodeList):
-    return
+
+def pruneGraph(edgeList, adjList, nodeList):
+    newadjList = adjList.copy()
+    for key in adjList.keys():
+        if len(adjList[key]) < 5:
+            for k2 in adjList[key].keys():
+                del newadjList[k2][key]
+                edgeList = [x for x in edgeList if x!= (k2, key) and x!= (key, k2)]
+            nodeList.remove(key)
+            del newadjList[key]
+
+    return edgeList, newadjList, nodeList
 # leave this at the bottom of the file
 if __name__ == '__main__':
     main()
