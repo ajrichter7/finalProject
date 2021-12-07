@@ -6,20 +6,25 @@ from graphspace_python.api.client import GraphSpace
 from graphspace_python.graphs.classes.gsgraph import GSGraph
 
 def main():
-    badgerEdgeList, badgerAdjList, badgerNodeList = read_badger('badger-files/badger-edges.txt')
-    # dijkstra(badgerAdjList, '015p')
+    badgerEdgeList, badgerAdjList, badgerAdjListUnweighted, badgerNodeList = read_badger('badger-files/badger-edges.txt')
     # badgerAdjList = read_adjlist('badger-files/badger-edges.txt', 1)
-    badgerCloseDict, badgerEccentDict = calculate(badgerAdjList)
+    # badgerCloseDict, badgerEccentDict = calculate(badgerAdjList)
     # outputFiles('BadgerEccentricityBFS.txt', badgerEccentDict)
-    outputtoGraph(badgerNodeList, badgerEdgeList, badgerAdjList, 'badgerEccentricityBFS', 'eccentricity', badgerEccentDict)
+    # outputtoGraph(badgerNodeList, badgerEdgeList, badgerAdjList, 'badgerEccentricityBFS', 'eccentricity', badgerEccentDict)
     # outputFiles('BadgerClosenessBFS.txt', badgerCloseDict)
     # outputtoGraph(badgerNodeList, badgerEdgeList, badgerAdjList, 'badgerClosenessBFS', 'closeness', badgerCloseDict)
 
-    # badgerCloseDictW, badgerEccentDictW = calculateDijkstra(badgerAdjList)
-    # #outputFiles('BadgerEccentricityDijkstraUnweighted.txt', badgerEccentDijDict)
-    # outputFiles('BadgerEccentricityDijkstraWeighted.txt', badgerEccentDictW)
-    # # outputFiles('BadgerClosenessDijkstraUnweighted.txt', badgerCloseDijDict)
-    # outputFiles('BadgerClosenessDijkstraWeighted.txt', badgerCloseDictW)
+    badgerCloseDictW, badgerEccentDictW = calculateDijkstra(badgerAdjList)
+    outputFiles('BadgerEccentricityDijkstraWeighted.txt', badgerEccentDictW)
+    outputtoGraph(badgerNodeList, badgerEdgeList, 'BadgerEccentricityDijkstraWeighted', 'eccentricity', badgerEccentDictW)
+    outputFiles('BadgerClosenessDijkstraWeighted.txt', badgerCloseDictW)
+    outputtoGraph(badgerNodeList, badgerEdgeList,'BadgerClosenessDijkstraWeighted', 'closeness', badgerCloseDictW)
+
+    badgerCloseDictUW, badgerEccentDictUW = calculateDijkstra(badgerAdjListUnweighted)
+    outputFiles('BadgerEccentricityDijkstraUnweighted.txt', badgerEccentDictUW)
+    outputtoGraph(badgerNodeList, badgerEdgeList, 'BadgerEccentricityDijkstraUnweighted', 'eccentricity', badgerEccentDictUW)
+    outputFiles('BadgerClosenessDijkstraUnweighted.txt', badgerCloseDictUW)
+    outputtoGraph(badgerNodeList, badgerEdgeList, 'BadgerClosenessDijkstraUnweighted', 'closeness', badgerCloseDictUW)
 
     # hippieEdgeList, hippieAdjList, hippieNodeList = read_hippie('hippie_current.txt')
     # print(hippieAdjList)
@@ -73,6 +78,7 @@ def read_badger(file_name):
     with open(file_name, 'r') as data:
         edgelist = {}
         adjList = {}
+        adjListUnweighted = {}
         node1 = []
         node2 = []
         for line in data:
@@ -82,11 +88,14 @@ def read_badger(file_name):
             edgelist[(edge[0], edge[1])] = float(edge[2])
             if edge[0] not in adjList:
                 adjList[edge[0]] = {}
+                adjListUnweighted[edge[0]] = {}
             adjList[edge[0]][edge[1]] = float(edge[2])
+            adjListUnweighted[edge[0]][edge[1]] = 1
             if edge[1] not in adjList:
                 adjList[edge[1]] = {}
+                adjListUnweighted[edge[1]] = {}
             adjList[edge[1]][edge[0]] = float(edge[2])
-
+            adjListUnweighted[edge[1]][edge[0]] = 1
     #Create a list of all the nodes in the network
     nodelist = []
     for i in node1:
@@ -95,7 +104,7 @@ def read_badger(file_name):
     for i in node2:
         if i not in nodelist: nodelist.append(i)
 
-    return edgelist, adjList, nodelist
+    return edgelist, adjList, adjListUnweighted, nodelist
 
 def read_hippie(file_name):
     #Function similar to read_badger except we change the input for delimiters
@@ -136,7 +145,7 @@ def read_hippie(file_name):
 
     return edgelist, adjList, nodelist
 
-def outputtoGraph(nodelist, edgeList, adjList, title, type, d):
+def outputtoGraph(nodelist, edgeList, title, type, d):
     G = GSGraph()
     attemptNum = input("Attempt Number: ") #put in to avoid multiple graph error
     G.set_name(title+attemptNum)
