@@ -111,13 +111,23 @@ I parsed the network using high confidence, so only edges with weights over .8. 
 _In one paragraph, summarize your findings_
 
 ### Badger Network Analysis
-Included are the respective graphs for running the various algorithms. 
+Included are the respective graphs for running the various iterations of the algorithms. 
 
-First is **Badger Closeness calculated using BFS**. The size varies with the closeness score as it is calculated by _multiplying_ a constant by the closeness value of that node, as closeness values are bigger than 1. The nodes that are colored yellow are the default color. Those that are colored orange have a higher closeness score (i.e. score greater than 25). If you want the respective score for each node, please check [the correct txt file](https://github.com/ajrichter7/finalProject/blob/main/BadgerClosenessBFS.txt). 
+**Badger Closeness calculated using BFS:** The size varies with the closeness score as it is calculated by _multiplying_ a constant by the closeness value of that node, as closeness values are bigger than 1. The nodes that are colored yellow are the default color. Those that are colored orange have a higher closeness score (i.e. score greater than 25). If you want the respective score for each node, please check [the correct txt file](https://github.com/ajrichter7/finalProject/blob/main/BadgerClosenessBFS.txt). 
 ![Badger Closeness BFS](https://github.com/ajrichter7/finalProject/blob/main/images/badgerclosenessbfs.png) 
 
-Next is **Badger Eccentricity calculated using BFS**. The size varies with the eccentricity score as it is calulated by _dividing_ a constant by the eccentricity value of that node, as eccentricity values are less than 1. If you want the respective score for each node, please check [the correct txt file](https://github.com/ajrichter7/finalProject/blob/main/BadgerEccentricityBFS.txt). 
+**Badger Eccentricity calculated using BFS:** The size varies with the eccentricity score as it is calulated by _dividing_ a constant by the eccentricity value of that node, as eccentricity values are less than 1. If you want the respective score for each node, please check [the correct txt file](https://github.com/ajrichter7/finalProject/blob/main/BadgerEccentricityBFS.txt). 
 ![Badger Eccentricity BFS](https://github.com/ajrichter7/finalProject/blob/main/images/badgereccentricitybfs.png) 
+
+**Badger Closeness and Eccentricity calculated using Dijkstra's (Unweighted):** I then ran Dijkstra's on the badger networks but using the unweighted adjacency list of edges. This simply meant that I gave each edge a weight of 1. When I ran it, it produced the same exact closeness and eccentricity scores as the BFS. This is not surprising as Dijkstra's without different weights is essentially BFS. This can be confirmed in the graphs and files that I uploaded to the repo. 
+* [Closeness txt using Dijkstra's Unweighted](https://github.com/ajrichter7/finalProject/blob/main/BadgerClosenessDijkstraUnweighted.txt) =  [Closeness txt using BFS](https://github.com/ajrichter7/finalProject/blob/main/BadgerClosenessBFS.txt)
+* [Eccentricity txt using Dijkstra's Unweighted](https://github.com/ajrichter7/finalProject/blob/main/BadgerEccentricityDijkstraUnweighted.txt) = [Eccentricty txt using BFS](https://github.com/ajrichter7/finalProject/blob/main/BadgerEccentricityBFS.txt)
+
+**Badger Closeness calculated using Dijkstra's (Weighted):** The size varies with the closeness score as it is calculated by _multiplying_ a constant by the closeness value of that node, as closeness values are bigger than 1. The nodes that are colored yellow are the default color. Unlike the graph from using BFS or unweighted Dijkstra's, there are no nodes with a closeness score greater than 25. If you want the respective score for each node, please check [the correct txt file](https://github.com/ajrichter7/finalProject/blob/main/BadgerClosenessDijkstraWeighted.txt). 
+![Badger Closeness Dijkstra Weighted](https://github.com/ajrichter7/finalProject/blob/main/images/badgerclosedijW.png)
+
+**Badger Eccentricity calculated using Dijkstra's (Weighted):** The size varies with the eccentricity score as it is calulated by _dividing_ a constant by the eccentricity value of that node, as eccentricity values are less than 1. This is noticeably different than using unweighted Dijkstra's or BFS. The file produced shows a large variation in eccentricity scores. If you were to look at the respective eccentricity scores of the nodes when using BFS/unweighted Dijkstra's, you would see a lot of repetition in the eccentricity scores. If you want the respective score for each node, please check [the correct txt file](https://github.com/ajrichter7/finalProject/blob/main/BadgerEccentricityDijkstraWeighted.txt). 
+![Badger Eccentricity Dijkstra Weighted](https://github.com/ajrichter7/finalProject/blob/main/images/badgereccentricitydijW.png)
 
 ### Hippie Network Analysis
 
