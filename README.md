@@ -111,6 +111,13 @@ I parsed the network using high confidence, so only edges with weights over .8. 
 _In one paragraph, summarize your findings_
 
 ### Badger Network Analysis
+Included are the respective graphs for running the various algorithms. 
+
+First is **Badger Closeness calculated using BFS**. The size varies with the closeness score as it is calculated by _multiplying_ a constant by the closeness value of that node, as closeness values are bigger than 1. The nodes that are colored yellow are the default color. Those that are colored orange have a higher closeness score (i.e. score greater than 25). If you want the respective score for each node, please check [the correct txt file](https://github.com/ajrichter7/finalProject/blob/main/BadgerClosenessBFS.txt). 
+![Badger Closeness BFS](https://github.com/ajrichter7/finalProject/blob/main/images/badgerclosenessbfs.png) 
+
+Next is **Badger Eccentricity calculated using BFS**. The size varies with the eccentricity score as it is calulated by _dividing_ a constant by the eccentricity value of that node, as eccentricity values are less than 1. If you want the respective score for each node, please check [the correct txt file](https://github.com/ajrichter7/finalProject/blob/main/BadgerEccentricityBFS.txt). 
+![Badger Eccentricity BFS](https://github.com/ajrichter7/finalProject/blob/main/images/badgereccentricitybfs.png) 
 
 ### Hippie Network Analysis
 
