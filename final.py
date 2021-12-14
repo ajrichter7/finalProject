@@ -30,13 +30,13 @@ def main():
     # outputtoGraph(badgerNodeList, badgerEdgeList, 'BadgerClosenessDijkstraUnweighted', 'closeness', badgerCloseDictUW)
 
     hippieEdgeList, hippieAdjList, hippieNodeList = read_hippie('hippie_current.txt')
-    print('len edgeList = ', len(hippieEdgeList))
-    print('len adjList = ', len(hippieAdjList))
-    print('len nodelist =', len(hippieNodeList))
+    # print('len edgeList = ', len(hippieEdgeList))
+    # print('len adjList = ', len(hippieAdjList))
+    # print('len nodelist =', len(hippieNodeList))
     hippieEdgeList, hippieAdjList, hippieNodeList = pruneGraph(hippieEdgeList, hippieAdjList, hippieNodeList)
-    print('len edgeList = ', len(hippieEdgeList))
-    print('len adjList = ', len(hippieAdjList))
-    print('len nodelist =', len(hippieNodeList))
+    # print('len edgeList = ', len(hippieEdgeList))
+    # print('len adjList = ', len(hippieAdjList))
+    # print('len nodelist =', len(hippieNodeList))
     hippieCloseDict, hippieEccentDict = calculate(hippieAdjList)
     # hippieEdgeList, hippieAdjList, hippieNodeList = fixdisconnectedcomp(hippieEdgeList, hippieAdjList, hippieNodeList, hippieCloseDict)
     # hippieCloseDict, hippieEccentDict = calculate(hippieAdjList)
@@ -76,6 +76,7 @@ def read_badger(file_name):
 
     #returns a edgelist which is a dictionary where the key is the tuple/edge and the value is the weight
     #returns a nodelist of all the nodes in the graph
+    #returns an adjList where it accounts for the edgeweight (dictionary of dictionaries)
     with open(file_name, 'r') as data:
         edgelist = {}
         adjList = {}
@@ -89,7 +90,6 @@ def read_badger(file_name):
             if edge[0] not in adjList:
                 adjList[edge[0]] = {}
             adjList[edge[0]][edge[1]] = float(edge[2])
-            adjListUnweighted[edge[0]][edge[1]] = 1
             if edge[1] not in adjList:
                 adjList[edge[1]] = {}
             adjList[edge[1]][edge[0]] = float(edge[2])
@@ -111,8 +111,9 @@ def read_hippie(file_name):
     #node1, node1 id, node2, node2 id, weight, info
 
     #returns a edgelist which is a dictionary where the key is the tuple/edge and the value is the weight
-    #note: we ignore edges that do not have a large weight do to the size of the graph
+    #note: we ignore edges that do not have a large weight do to the size of the graph, higher than .95
     #returns a nodelist of all the nodes that have edges in the graph
+    #returns an adjList that is a dictionary of dictionaries and accounts for edgeweights
     with open(file_name, 'r') as data:
         edgelist = {}
         node1 = []
@@ -173,6 +174,7 @@ def outputtoGraph(nodelist, edgeList, title, type, d):
             if d[node] > 100: c = 'purple'
             if d[node] > 1000: c = 'blue'
             if d[node] > 5000: c = 'green'
+            #changes the color of the nodes based on the closeness value for the node
             G.add_node_style(node, color = c, height=10 * d[node],width=10 * d[node])
         for edge in edgeList:
             G.add_edge(edge[0],edge[1])
@@ -180,6 +182,8 @@ def outputtoGraph(nodelist, edgeList, title, type, d):
     utils.post(gs,G,'graph_name')
     return
 
+#Attempted to function to figure out if connected component by taking in the edge list,
+#adjlist, nodels, and closeDictionary. It was supposed to remove edges if it was not close to any other nodes
 # def fixdisconnectedcomp(edge, adj, nodels, closeDict):
 #     templs = []
 #     print(closeDict)
@@ -195,6 +199,7 @@ def outputtoGraph(nodelist, edgeList, title, type, d):
 #     return edge, adj, nodels
 
 def calculate(adjList):
+    #calls function to create dictionary of closeness and eccentricity values for each node in the graph
     closeDict = {}
     eccentDict = {}
     for node in adjList.keys():
@@ -236,6 +241,8 @@ def ClosenessAndEccentricityBFS(adjList, input):
     return closeness, eccentricity
 
 def calculateDijkstra(adjList, weighting):
+    #Calculating closeness and eccentricity dictionaries in which we calculate score for
+    #each node in the graph. uses dijkstra's
     closeDict = {}
     eccentDict = {}
     # disconnectednodes = set()
@@ -247,6 +254,7 @@ def calculateDijkstra(adjList, weighting):
     return closeDict, eccentDict
 
 def dijkstra(adjList, input, weighting):
+    #implementation of dijkstra
     inf = 10000000000000000
     D = {}
     D[input] = 0
@@ -290,6 +298,9 @@ def dijkstra(adjList, input, weighting):
 
 
 def pruneGraph(edgeList, adjList, nodeList):
+    #helper function to make the graph (hippe) smaller so less nodes to graph
+    #if a node is connected to less than 5 nodes, then we will remove the node
+    #this means we expect it not to be an important node because it has few connections
     newadjList = adjList.copy()
     for key in adjList.keys():
         if len(adjList[key]) < 5:
